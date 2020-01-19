@@ -665,15 +665,64 @@ defmodule Matrex.Algorithms do
     %{coefs: coefs, fun: &poly_func(&1, coefs), error: fX |> Enum.at(-1)}
   end
 
+  @doc """
+  Fit polynomial function based on given `x` and `y` using gradient descent (`fmincg/4`) using
+  `linear_cost_fun/4`.
+
+  This approach produces decent results for many datasets. It isn't as efficient as using
+  least squares, but is still useful and provides a goode example of how to optimize general
+  functions.
+
+  Note that gradient descent won't always converge well for polynomials with linear cost function.
+  If this happens for your dataset try adjusting `opts` parameters. Uses the `fmincg/4` algorithm
+  from this module.
+
+  `x`  — training data input.
+
+  `y`  — training data output.
+
+  `opts` - algorithm parameters
+    `lambda`  — regularization parameter.
+    `iterations`  — regularization parameter.
+
+  """
+  @spec fit_func(Matrex.t(), Matrex.t(), pos_integer, keyword() ) ::
+      %{ coefs: keyword(), error: float(), fun: (Matrex.t() -> Matrex.t()) }
+  def fit_func(x, y, fun_arrays, opts \\ []) do
+    iterations = Keyword.get(opts, :iterations, 100)
+    lambda = Keyword.get(opts, :lambda, 1.0)
+    thetas = Keyword.get(opts, :thetas, Matrex.zeros(Enum.count(fun_arrays) + 1, 1))
+
+    {m, n} = Matrex.size(y)
+    unless m >= n, do: raise %ArgumentError{message: "y shape (m,n) must have m > n"}
+
+    xx =
+      for ith_fun <- fun_arrays, into: [] do
+        x |> Matrex.apply(ith_fun)
+      end |> Matrex.concat()
+
+    {sX, fX, _i} =  fmincg(&linear_cost_fun/3, thetas, {xx, y, lambda}, iterations)
+
+    coefs = sX |> Enum.to_list() |> Enum.with_index(0) |> Enum.map(fn {x,y} -> {y,x} end)
+    %{coefs: coefs, fun: &array_func(&1, fun_arrays, coefs), error: fX |> Enum.at(-1)}
+  end
+
   def fit_linear(x, y, opts \\ []) do
     fit_poly(x, y, 1, opts)
   end
 
   defp poly_func(x, coefs) when is_list(coefs) do
-    # coefs_idx = Enum.with_index(coefs, 0)
     x |> Enum.map(fn x ->
-      Enum.reduce(coefs, 0.0, fn {i, f}, acc ->
-        acc + f * :math.pow(x, i)
+      Enum.reduce(coefs, 0.0, fn {i, c}, acc ->
+        acc + c * :math.pow(x, i)
+      end)
+    end)
+  end
+
+  defp array_func(x, fun_arrays, coefs) when is_list(coefs) do
+    x |> Enum.map(fn x ->
+      Enum.reduce(Enum.zip(coefs, fun_arrays), 0.0, fn {{_i, c}, fun}, acc ->
+        acc + c * fun.(x)
       end)
     end)
   end
