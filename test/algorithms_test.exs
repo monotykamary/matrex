@@ -33,13 +33,13 @@ defmodule AlgorithmsTest do
 
     {j, grad} = Algorithms.lr_cost_fun(theta_t, {x_t, y_t, lambda_t, 0})
 
-    assert grad == expected_grad || grad == expected_grad2
+    assert Matrex.subtract(grad, expected_grad) |> Matrex.apply(:abs) |> Matrex.sum() < 1.0e-6
     assert j == expected_j
 
-    {j, grad} = Algorithms.lr_cost_fun_ops(theta_t, {x_t, y_t, lambda_t})
+    # {j, grad} = Algorithms.lr_cost_fun_ops(theta_t, {x_t, y_t, lambda_t})
 
-    assert grad == expected_grad || grad == expected_grad2
-    assert j == expected_j
+    # assert grad == expected_grad || grad == expected_grad2
+    # assert j == expected_j
   end
 
   @tag skip: false
@@ -155,6 +155,33 @@ defmodule AlgorithmsTest do
         {2, 6.991103172302246}
       ],
       error: 149.0388957698171,
+    }
+
+    # IO.inspect(fit, label: :fit)
+    expected_coefs = expected_fit[:coefs] |> coefs_nums()
+    coefs = fit[:coefs] |> coefs_nums()
+
+    # Due to the randomness in GD, these parameters will vary more than most tests
+    assert coefs |> Matrex.subtract(expected_coefs) |> Matrex.sum() < 1.0e-2
+  end
+
+  test "fit_sqrt " do
+    m = Matrex.load("test/data/sqrt_fit.mtx") |> Matrex.transpose
+    ts = m |> Matrex.submatrix(42..480, 1..1)
+    tx = m |> Matrex.submatrix(42..480, 2..2) |> Matrex.multiply(-1.0e6)
+    # ts = m[1]
+    # tx = m[2]
+
+    fns = [fn x -> 1.0/:math.sqrt(abs(x)) end, fn _ -> 1.0 end]
+    # fit = Algorithms.fit_func(tx, ts, fns, thetas: Matrex.new([[0.001], [1_700]]), iterations: 20_000)
+    fit = Algorithms.fit_func(ts, tx, fns, thetas: Matrex.new([[10_000], [10.0]]), iterations: 4_000)
+
+    expected_fit = %{
+      coefs: [
+        {0, 1821.6837158203125},
+        {1, 0.28539493680000305},
+      ],
+      error: 0.01395569629712637,
     }
 
     # IO.inspect(fit, label: :fit)
