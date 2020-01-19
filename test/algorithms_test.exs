@@ -26,10 +26,10 @@ defmodule AlgorithmsTest do
       )
 
     # On Travis CI the first element is computed a bit differently.
-    expected_grad2 =
-      Matrex.new(
-        "0.14656135439872742; -0.5485584139823914; 0.7247222661972046; 1.3980028629302979"
-      )
+    # expected_grad2 =
+    #   Matrex.new(
+    #     "0.14656135439872742; -0.5485584139823914; 0.7247222661972046; 1.3980028629302979"
+    #   )
 
     {j, grad} = Algorithms.lr_cost_fun(theta_t, {x_t, y_t, lambda_t, 0})
 
