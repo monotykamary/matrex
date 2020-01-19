@@ -50,8 +50,8 @@ defmodule MatrexTest do
     input = Matrex.random(500)
     output = Matrex.apply(input, :exp)
 
-    assert Float.round(Matrex.at(output, 325, 414), 5) ==
-             Float.round(:math.exp(Matrex.at(input, 325, 414)), 5)
+    assert Float.round(Matrex.at(output, 325, 414), 4) ==
+             Float.round(:math.exp(Matrex.at(input, 325, 414)), 4)
   end
 
   test "#apply/2 applies a function/1 on each element of the matrix" do

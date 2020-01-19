@@ -691,7 +691,7 @@ defmodule Matrex.Algorithms do
   def fit_func(x, y, fun_arrays, opts \\ []) do
     iterations = Keyword.get(opts, :iterations, 100)
     lambda = Keyword.get(opts, :lambda, 1.0)
-    thetas = Keyword.get(opts, :thetas, Matrex.zeros(Enum.count(fun_arrays) + 1, 1))
+    thetas = Keyword.get(opts, :thetas, Matrex.zeros(Enum.count(fun_arrays), 1))
 
     {m, n} = Matrex.size(y)
     unless m >= n, do: raise %ArgumentError{message: "y shape (m,n) must have m > n"}

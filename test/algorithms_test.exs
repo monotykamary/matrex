@@ -166,6 +166,32 @@ defmodule AlgorithmsTest do
     assert coefs |> Matrex.subtract(expected_coefs) |> Matrex.sum() < 1.0e-2
   end
 
+  test "#fit_poly using fit_func" do
+    m = Matrex.load("test/rand_array.mtx")
+    y = m |> Matrex.submatrix(1..41, 2..2)
+    x = m |> Matrex.submatrix(1..41, 1..1)
+
+    # fit = Algorithms.fit_poly(x, y, 2)
+    fns = [fn _ -> 1.0 end, fn x -> x end, fn x -> :math.pow(x,2) end]
+    fit = Algorithms.fit_func(x, y, fns, iterations: 2_000)
+
+    expected_fit = %{
+      coefs: [
+        {0, 37.48050308227539},
+        {1, 6.260676383972168},
+        {2, 6.991103172302246}
+      ],
+      error: 149.0388957698171,
+    }
+
+    # IO.inspect(fit, label: :fit)
+    expected_coefs = expected_fit[:coefs] |> coefs_nums()
+    coefs = fit[:coefs] |> coefs_nums()
+
+    # Due to the randomness in GD, these parameters will vary more than most tests
+    assert coefs |> Matrex.subtract(expected_coefs) |> Matrex.sum() < 1.0e-2
+  end
+
   test "fit_sqrt " do
     m = Matrex.load("test/data/sqrt_fit.mtx") |> Matrex.transpose
     ts = m |> Matrex.submatrix(42..480, 1..1)
