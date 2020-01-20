@@ -333,7 +333,7 @@ defmodule Matrex.Algorithms do
     fit_poly(x, y, 1, opts)
   end
 
-  defp poly_func(x, coefs) when is_list(coefs) do
+  def poly_func(x, coefs) when is_list(coefs) do
     x |> Enum.map(fn x ->
       Enum.reduce(coefs, 0.0, fn {i, c}, acc ->
         acc + c * :math.pow(x, i)
@@ -341,7 +341,7 @@ defmodule Matrex.Algorithms do
     end)
   end
 
-  defp array_func(x, fun_arrays, coefs) when is_list(coefs) do
+  def array_func(x, fun_arrays, coefs) when is_list(coefs) do
     x |> Enum.map(fn x ->
       Enum.reduce(Enum.zip(coefs, fun_arrays), 0.0, fn {{_i, c}, fun}, acc ->
         acc + c * fun.(x)
