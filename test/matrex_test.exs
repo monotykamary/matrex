@@ -779,4 +779,20 @@ defmodule MatrexTest do
 
       assert m! == Matrex.new("1 2; 9 16; 5 6")
   end
+
+  test "#set submatrix" do
+      m = Matrex.new("1 2 3; 4 5 6; 7 8 9")
+
+      m! = Matrex.set_submatrix(m, 2..3, 2..3, Matrex.new("1 0; 0 1;"))
+
+      # ┌                         ┐
+      # │     1.0     2.0     3.0 │
+      # │     4.0     1.0     0.0 │
+      # │     7.0     0.0     1.0 │
+      # └                         ┘
+      IO.puts("submatrix: m: #{inspect m}")
+      IO.puts("submatrix: m!: #{inspect m!}")
+
+      assert m! == Matrex.new("1 2 3; 4 1 0; 7 0 1")
+  end
 end
