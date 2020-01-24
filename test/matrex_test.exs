@@ -795,11 +795,11 @@ defmodule MatrexTest do
       # IO.puts("post_matrex: #{inspect Matrex.new("1 0 3; 0 1 6; 7 8 9")}")
       assert m2! == Matrex.new("1 0 3; 0 1 6; 7 8 9")
   end
-  # test "#set submatrix 3" do
-  #     m2 = Matrex.new("1 2 3; 4 5 6; 7 8 9")
+  test "#set submatrix 3" do
+      m2 = Matrex.new("1 2 3; 4 5 6; 7 8 9")
 
-  #     m2! = Matrex.set_submatrix(m2, 1..2, 1..2, Matrex.new("1 0; 0 1;"))
-  #     # IO.puts("post_matrex: #{inspect Matrex.new("1 0 3; 0 1 6; 7 8 9")}")
-  #     assert m2! == Matrex.new("1 2 3; 4 5 6; 7 8 9")
-  # end
+      m2! = Matrex.set_submatrix(m2, 2..3, 1..3, Matrex.new("1 0 1; 0 1 0;"))
+      # IO.puts("post_matrex: #{inspect Matrex.new("1 0 3; 0 1 6; 7 8 9")}")
+      assert m2! == Matrex.new("1 2 3; 1 0 1; 0 1 0")
+  end
 end
