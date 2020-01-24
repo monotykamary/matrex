@@ -1122,6 +1122,52 @@ submatrix(ErlNifEnv* env, int32_t argc, const ERL_NIF_TERM *argv) {
 }
 
 static ERL_NIF_TERM
+set_submatrix(ErlNifEnv* env, int32_t argc, const ERL_NIF_TERM *argv) {
+  ErlNifBinary  matrix;
+  ErlNifBinary  sub_matrix;
+  float *matrix_data;
+  float *sub_matrix_data;
+  float *result_data;
+  uint32_t  result_size;
+  int32_t       data_size;
+  unsigned long row_from, row_to, column_from, column_to;
+  ERL_NIF_TERM  result;
+  uint32_t rows, cols, sub_rows, sub_cols;
+
+  (void)(argc);
+
+  if (!enif_inspect_binary(env, argv[0], &matrix)) return enif_make_badarg(env);
+  enif_get_uint64(env, argv[1], &row_from);
+  enif_get_uint64(env, argv[2], &row_to);
+  enif_get_uint64(env, argv[3], &column_from);
+  enif_get_uint64(env, argv[4], &column_to);
+  if (!enif_inspect_binary(env, argv[5], &sub_matrix)) return enif_make_badarg(env);
+
+  matrix_data = (float *) matrix.data;
+  data_size   = MX_LENGTH(matrix_data);
+  rows = MX_ROWS(matrix_data);
+  cols = MX_COLS(matrix_data);
+  sub_matrix_data = (float *) sub_matrix.data;
+  sub_rows = MX_ROWS(sub_matrix_data);
+  sub_cols = MX_COLS(sub_matrix_data);
+
+  if (row_from >= rows || column_from >= cols || row_to >= rows || column_to >= cols)
+    return enif_raise_exception(env, enif_make_string(env,
+      "Submatrix position out of bounds.", ERL_NIF_LATIN1));
+
+  result_size = sizeof(float) * data_size;
+  result_data = (float *) enif_make_new_binary(env, result_size, &result);
+
+  matrix_set_submatrix(matrix_data,
+                       row_from, row_to,
+                       column_from, column_to,
+                       sub_matrix_data,
+                       result_data);
+
+  return result;
+}
+
+static ERL_NIF_TERM
 subtract(ErlNifEnv *env, int32_t argc, const ERL_NIF_TERM *argv) {
   ErlNifBinary  first, second;
   ERL_NIF_TERM  result;
@@ -1308,7 +1354,7 @@ static ErlNifFunc nif_functions[] = {
   {"dot_nt",               2, dot_nt,               0},
   {"dot_tn",               3, dot_tn,               0},
   {"cholesky",             1, cholesky,             0},
-  {"forward_substitute",                2, forward_substitute,                0},
+  {"forward_substitute",   2, forward_substitute,   0},
   {"eye",                  2, eye,                  0},
   {"diagonal",             1, diagonal,             0},
   {"fill",                 3, fill,                 0},
@@ -1329,6 +1375,7 @@ static ErlNifFunc nif_functions[] = {
   {"set_column",           3, set_column,           0},
   {"set_row",              3, set_row,              0},
   {"submatrix",            5, submatrix,            0},
+  {"set_submatrix",        6, set_submatrix,        0},
   {"subtract",             2, subtract,             0},
   {"subtract_from_scalar", 2, subtract_from_scalar, 0},
   {"sum",                  1, sum,                  0},

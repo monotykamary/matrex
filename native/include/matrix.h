@@ -133,8 +133,18 @@ void
 matrix_set_row(const Matrix matrix, const uint32_t row, const Matrix row_matrix, Matrix result);
 
 void
+matrix_set_column(const Matrix matrix, const uint32_t col, const Matrix column_matrix, Matrix result);
+
+void
 matrix_submatrix(const Matrix matrix, const uint32_t row_from, const uint32_t row_to,
   const uint32_t column_from, const uint32_t column_to, Matrix result);
+
+void
+matrix_set_submatrix(const Matrix matrix,
+                     const uint32_t row_from, const uint32_t row_to,
+                     const uint32_t column_from, const uint32_t column_to,
+                     const Matrix submatrix,
+                     Matrix result);
 
 void
 matrix_subtract(const Matrix first, const Matrix second, Matrix result);

@@ -23,6 +23,7 @@
 
 defmodule Matrex.Algorithms do
   alias Matrex.Algorithms
+  alias Matrex.Dashboard
 
   @doc """
   Logistic regression cost and gradient function with regularization from Andrew Ng's course (ex3).
