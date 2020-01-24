@@ -534,20 +534,17 @@ matrix_set_submatrix(const Matrix matrix,
                      Matrix result) {
 
   const uint32_t cols = MX_COLS(matrix);
-  const uint32_t rows = MX_ROWS(matrix);
+  // const uint32_t rows = MX_ROWS(matrix);
 
-  // const uint32_t subrows = row_to - row_from + 1;
+  // const uint32_t subcols = column_to - column_from + 1;
   const uint32_t subcols = column_to - column_from + 1;
-
-  // uint64_t length = MX_DATA_BYTE_SIZE(matrix);
   uint64_t data_size = MX_BYTE_SIZE(matrix);
 
   memcpy(result, matrix, data_size);
 
-  // result[2 + row*MX_COLS(matrix) + column] = scalar;
   for (uint32_t row = row_from; row <= row_to; row++)
-    memcpy(&result[2 + (row - row_from + 1)*cols + column_from],
-           &submatrix[2 + (row - row_from - 0)*subcols + (column_from-column_from)],
+    memcpy(&result[2 + (row )*cols + column_from],
+           &submatrix[2 + (row - row_from - 0)*subcols ],
            subcols * sizeof(float));
 }
 
