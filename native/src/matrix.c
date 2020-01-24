@@ -505,8 +505,10 @@ matrix_set_row(const Matrix matrix, const uint32_t row, const Matrix row_matrix,
 
 
 void
-matrix_submatrix(const Matrix matrix, const uint32_t row_from, const uint32_t row_to,
-  const uint32_t column_from, const uint32_t column_to, Matrix result) {
+matrix_submatrix(const Matrix matrix,
+                 const uint32_t row_from, const uint32_t row_to,
+                 const uint32_t column_from, const uint32_t column_to,
+                 Matrix result) {
 
   const uint32_t source_columns = MX_COLS(matrix);
 
@@ -520,6 +522,33 @@ matrix_submatrix(const Matrix matrix, const uint32_t row_from, const uint32_t ro
     memcpy(&result[2 + (row - row_from)*columns],
            &matrix[2 + row*source_columns + column_from],
            columns * sizeof(float));
+    // cblas_scopy(columns, &matrix[2 + row*source_columns + column_from], 1,
+    //                      &result[2 + (row - row_from)*columns], 1);
+}
+
+void
+matrix_set_submatrix(const Matrix matrix,
+                     const uint32_t row_from, const uint32_t row_to,
+                     const uint32_t column_from, const uint32_t column_to,
+                     const Matrix submatrix,
+                     Matrix result) {
+
+  const uint32_t cols = MX_COLS(matrix);
+  const uint32_t rows = MX_ROWS(matrix);
+
+  // const uint32_t subrows = row_to - row_from + 1;
+  const uint32_t subcols = column_to - column_from + 1;
+
+  MX_SET_ROWS(result, rows);
+  MX_SET_COLS(result, cols);
+
+  uint64_t length = MX_DATA_BYTE_SIZE(matrix);
+  memset((void*)&result[2], matrix[2], length);
+
+  for (uint32_t row = row_from; row <= row_to; row++)
+    memcpy(&result[2 + (row - row_from)*cols],
+           &submatrix[2 + row*subcols],
+           subcols * sizeof(float));
     // cblas_scopy(columns, &matrix[2 + row*source_columns + column_from], 1,
     //                      &result[2 + (row - row_from)*columns], 1);
 }

@@ -2506,6 +2506,53 @@ defmodule Matrex do
   end
 
   @doc """
+  Set submatrix for a given matrix. NIF.
+
+  Rows and columns ranges are inclusive and one-based.
+
+  ## Example
+
+      iex> m = Matrex.new("1 2 3; 4 5 6; 7 8 9")
+      #Matrex[3×3]
+      ┌                         ┐
+      │     1.0     2.0     3.0 │
+      │     4.0     5.0     6.0 │
+      │     7.0     8.0     9.0 │
+      └                         ┘
+
+      iex> Matrex.set_submatrix(m, 2..3, 2..3, Matrex.new("1 0; 0 1;"))
+      #Matrex[3×3]
+      ┌                         ┐
+      │     1.0     2.0     3.0 │
+      │     4.0     1.0     0.0 │
+      │     7.0     0.0     1.0 │
+      └                         ┘
+  """
+  @spec set_submatrix(matrex, Range.t(), Range.t(), matrex) :: matrex
+  def set_submatrix(matrex_data(rows, cols, _rest, data),
+                    row_from..row_to, col_from..col_to,
+                    matrex_data(sub_rows, sub_cols, _sub_rest, subdata))
+      when row_from in 1..rows and
+           row_to in row_from..rows and
+           col_from in 1..cols and
+           col_to in col_from..cols and
+           sub_rows == (row_to-row_from+1) and
+           sub_cols == (col_to-col_from+1),
+      do: %Matrex{data: NIFs.set_submatrix(data,
+                                           row_from - 1, row_to - 1, col_from - 1, col_to - 1,
+                                           subdata)}
+
+  def set_submatrix(%Matrex{} = matrex, rows, cols, %Matrex{} = submatrix) do
+    raise(
+      RuntimeError,
+      "Submatrix position out of range or malformed: position is " <>
+        "(#{Kernel.inspect(rows)}, #{Kernel.inspect(cols)}), source size is " <>
+        "(#{Kernel.inspect(1..matrex[:rows])}, #{Kernel.inspect(1..matrex[:columns])})" <>
+        "for submatrix (#{Kernel.inspect(1..submatrix[:rows])}, #{Kernel.inspect(1..submatrix[:columns])})"
+    )
+  end
+
+  @doc """
   Subtracts two matrices or matrix from scalar element-wise. NIF.
 
   Raises `ErlangError` if matrices' sizes do not match.
