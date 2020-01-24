@@ -2498,7 +2498,7 @@ defmodule Matrex do
 
   def submatrix(%Matrex{} = matrex, rows, cols) do
     raise(
-      RuntimeError,
+      ArgumentError,
       "Submatrix position out of range or malformed: position is " <>
         "(#{Kernel.inspect(rows)}, #{Kernel.inspect(cols)}), source size is " <>
         "(#{Kernel.inspect(1..matrex[:rows])}, #{Kernel.inspect(1..matrex[:columns])})"
@@ -2544,7 +2544,7 @@ defmodule Matrex do
 
   def set_submatrix(%Matrex{} = matrex, rows, cols, %Matrex{} = submatrix) do
     raise(
-      RuntimeError,
+      ArgumentError,
       "Submatrix position out of range or malformed: position is " <>
         "(#{Kernel.inspect(rows)}, #{Kernel.inspect(cols)}), source size is " <>
         "(#{Kernel.inspect(1..matrex[:rows])}, #{Kernel.inspect(1..matrex[:columns])})" <>
