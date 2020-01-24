@@ -499,8 +499,8 @@ void
 matrix_set_row(const Matrix matrix, const uint32_t row, const Matrix row_matrix, Matrix result) {
   memcpy(result, matrix, MX_BYTE_SIZE(matrix));
   // cblas_scopy(MX_LENGTH(matrix), matrix, 1, result, 1);
-  for (uint64_t column = 0; row < MX_ROWS(matrix); column++ )
-    result[2 + column*MX_COLS(matrix) + row] = row_matrix[2 + column];
+  for (uint64_t column = 0; column < MX_COLS(matrix); column++ )
+    result[2 + row*MX_COLS(matrix) + column] = row_matrix[2 + column];
 }
 
 
