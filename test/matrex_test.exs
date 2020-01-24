@@ -780,6 +780,14 @@ defmodule MatrexTest do
       assert m! == Matrex.new("1 2; 9 16; 5 6")
   end
 
+  test "#submatrix mismatch" do
+      m2 = Matrex.new("1 2 3; 4 5 6; 7 8 9")
+
+      assert_raise ArgumentError, fn ->
+        Matrex.submatrix(m2, 2..4, 1..2)
+      end
+  end
+
   test "#set submatrix 1" do
       m1 = Matrex.new("1 2 3; 4 5 6; 7 8 9")
 
@@ -802,11 +810,13 @@ defmodule MatrexTest do
       # IO.puts("post_matrex: #{inspect Matrex.new("1 0 3; 0 1 6; 7 8 9")}")
       assert m2! == Matrex.new("1 2 3; 1 0 1; 0 1 0")
   end
-  test "#set submatrix 3" do
+  test "#set submatrix mismatch" do
       m2 = Matrex.new("1 2 3; 4 5 6; 7 8 9")
 
-      m2! = Matrex.set_submatrix(m2, 2..3, 1..2, Matrex.new("1 0 1; 0 1 0;"))
       # IO.puts("post_matrex: #{inspect Matrex.new("1 0 3; 0 1 6; 7 8 9")}")
-      assert m2! == Matrex.new("1 2 3; 1 0 1; 0 1 0")
+      # assert m2! == Matrex.new("1 2 3; 1 0 1; 0 1 0")
+      assert_raise ArgumentError, fn ->
+        Matrex.set_submatrix(m2, 2..3, 1..2, Matrex.new("1 0 1; 0 1 0;"))
+      end
   end
 end
