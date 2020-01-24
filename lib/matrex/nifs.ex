@@ -283,6 +283,11 @@ defmodule Matrex.NIFs do
       when is_binary(matrex) and is_integer(column) and is_binary(column_matrex),
       do: :erlang.nif_error(:nif_library_not_loaded)
 
+  @spec set_row(binary, non_neg_integer, binary) :: binary
+  def set_row(matrex, row, row_matrex)
+      when is_binary(matrex) and is_integer(row) and is_binary(row_matrex),
+      do: :erlang.nif_error(:nif_library_not_loaded)
+
   @spec submatrix(binary, pos_integer, pos_integer, pos_integer, pos_integer) :: binary
   def submatrix(matrex, row_from, row_to, col_from, col_to)
       when is_binary(matrex) and is_integer(row_from) and is_integer(row_to) and

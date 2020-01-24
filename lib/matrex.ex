@@ -2378,6 +2378,36 @@ defmodule Matrex do
       do: %Matrex{data: NIFs.set_column(matrix, column - 1, column_matrix)}
 
   @doc """
+  Set row of a matrix to the values from the given 1-row matrix. NIF.
+
+  ## Example
+
+      iex> m = Matrex.reshape(1..6, 3, 2)
+      #Matrex[3×2]
+      ┌                    ┐
+      │     1.0     2.0    │
+      │     3.0     4.0    │
+      │     5.0     6.0    │
+      └                    ┘
+
+      iex> Matrex.set_row(m, 2, Matrex.new("2; 4"))
+      #Matrex[3×2]
+      ┌                    ┐
+      │     2.0     4.0    │
+      │     3.0     8.0    │
+      │     5.0     9.0    │
+      └                    ┘
+  """
+  @spec set_row(matrex, index, matrex) :: matrex
+  def set_row(
+        matrex_data(rows, columns, _rest1, matrix),
+        row,
+        matrex_data(1, columns, _rest2, row_matrix)
+      )
+      when row in 1..rows,
+      do: %Matrex{data: NIFs.set_row(matrix, row - 1, row_matrix)}
+
+  @doc """
   Return size of matrix as `{rows, cols}`
 
   ## Example

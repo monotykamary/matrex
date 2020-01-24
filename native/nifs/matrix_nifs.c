@@ -1054,6 +1054,38 @@ set_column(ErlNifEnv* env, int32_t argc, const ERL_NIF_TERM *argv) {
 }
 
 static ERL_NIF_TERM
+set_row(ErlNifEnv* env, int32_t argc, const ERL_NIF_TERM *argv) {
+  ErlNifBinary  matrix, row_matrix;
+  float *matrix_data;
+  float *row_matrix_data;
+  float *result_data;
+  uint32_t  result_size;
+  unsigned long row;
+  ERL_NIF_TERM  result;
+  uint32_t rows;
+
+  UNUSED_VAR(argc);
+
+  if (!enif_inspect_binary(env, argv[0], &matrix)) return enif_make_badarg(env);
+  enif_get_uint64(env, argv[1], &row);
+  if (!enif_inspect_binary(env, argv[2], &row_matrix)) return enif_make_badarg(env);
+
+  matrix_data = (float *) matrix.data;
+  row_matrix_data = (float *) row_matrix.data;
+  rows = MX_COLS(matrix_data);
+
+  if (row >= rows)
+    return enif_raise_exception(env, enif_make_string(env, "Position out of bounds.", ERL_NIF_LATIN1));
+
+  result_size = MX_BYTE_SIZE(matrix_data);
+  result_data = (float *) enif_make_new_binary(env, result_size, &result);
+
+  matrix_set_row(matrix_data, row, row_matrix_data, result_data);
+
+  return result;
+}
+
+static ERL_NIF_TERM
 submatrix(ErlNifEnv* env, int32_t argc, const ERL_NIF_TERM *argv) {
   ErlNifBinary  matrix;
   float *matrix_data;
@@ -1295,6 +1327,7 @@ static ErlNifFunc nif_functions[] = {
   {"row_to_list",          2, row_to_list,          0},
   {"set",                  4, set,                  0},
   {"set_column",           3, set_column,           0},
+  {"set_row",              3, set_row,              0},
   {"submatrix",            5, submatrix,            0},
   {"subtract",             2, subtract,             0},
   {"subtract_from_scalar", 2, subtract_from_scalar, 0},

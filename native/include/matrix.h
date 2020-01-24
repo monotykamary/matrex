@@ -130,7 +130,7 @@ void
 matrix_set(const Matrix matrix, const uint32_t row, const uint32_t column, const float scalar, Matrix result);
 
 void
-matrix_set_column(const Matrix matrix, const uint32_t column, const Matrix column_matrix, Matrix result);
+matrix_set_row(const Matrix matrix, const uint32_t row, const Matrix row_matrix, Matrix result);
 
 void
 matrix_submatrix(const Matrix matrix, const uint32_t row_from, const uint32_t row_to,

@@ -495,6 +495,14 @@ matrix_set_column(const Matrix matrix, const uint32_t column, const Matrix colum
     result[2 + row*MX_COLS(matrix) + column] = column_matrix[2 + row];
 }
 
+void
+matrix_set_row(const Matrix matrix, const uint32_t row, const Matrix row_matrix, Matrix result) {
+  memcpy(result, matrix, MX_BYTE_SIZE(matrix));
+  // cblas_scopy(MX_LENGTH(matrix), matrix, 1, result, 1);
+  for (uint64_t column = 0; row < MX_ROWS(matrix); column++ )
+    result[2 + column*MX_COLS(matrix) + row] = row_matrix[2 + column];
+}
+
 
 void
 matrix_submatrix(const Matrix matrix, const uint32_t row_from, const uint32_t row_to,
