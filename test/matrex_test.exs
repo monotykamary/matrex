@@ -763,4 +763,20 @@ defmodule MatrexTest do
     m = reshape(1..6, 3, 2)
     assert_raise ArgumentError, fn -> update(m, 2, 3, fn x -> x * x end) end
   end
+
+  test "#set colum" do
+      m = Matrex.reshape(1..6, 3, 2)
+
+      m! = Matrex.set_column(m, 2, Matrex.new("7; 8; 9"))
+
+      assert m! == Matrex.new("1 7; 3 8; 5 9")
+  end
+
+  test "#set row" do
+      m = Matrex.reshape(1..6, 3, 2)
+
+      m! = Matrex.set_row(m, 2, Matrex.new("9 16"))
+
+      assert m! == Matrex.new("1 2; 9 16; 5 6")
+  end
 end
