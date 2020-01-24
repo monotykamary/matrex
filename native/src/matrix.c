@@ -539,18 +539,15 @@ matrix_set_submatrix(const Matrix matrix,
   // const uint32_t subrows = row_to - row_from + 1;
   const uint32_t subcols = column_to - column_from + 1;
 
-  MX_SET_ROWS(result, rows);
-  MX_SET_COLS(result, cols);
-
   uint64_t length = MX_DATA_BYTE_SIZE(matrix);
-  memset((void*)&result[2], matrix[2], length);
+  uint64_t data_size = MX_BYTE_SIZE(matrix);
 
-  for (uint32_t row = row_from; row <= row_to; row++)
-    memcpy(&result[2 + (row - row_from)*cols],
-           &submatrix[2 + row*subcols],
-           subcols * sizeof(float));
-    // cblas_scopy(columns, &matrix[2 + row*source_columns + column_from], 1,
-    //                      &result[2 + (row - row_from)*columns], 1);
+  memcpy(result, matrix, data_size);
+
+  // for (uint32_t row = row_from; row <= row_to; row++)
+  //   memcpy(&result[2 + (row - row_from)*cols],
+  //          &submatrix[2 + row*subcols],
+  //          subcols * sizeof(float));
 }
 
 void
