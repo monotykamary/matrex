@@ -31,6 +31,14 @@ defmodule Matrex.Operators do
 
   """
 
+  defmacro __using__(_) do
+    quote do
+      import Kernel, except: [-: 1, +: 2, -: 2, *: 2, /: 2, <|>: 2]
+      import Matrex
+      import Matrex.Operators
+    end
+  end
+
   # Unary
   @doc false
   def -m, do: Matrex.neg(m)
@@ -68,4 +76,11 @@ defmodule Matrex.Operators do
   defdelegate t(m), to: Matrex, as: :transpose
   @doc "See `Matrex.square/1`"
   defdelegate pow2(matrex), to: Matrex, as: :square
+
+  def pow(m,p) when is_number(a) and is_number(b), do: :math.pow(m,p)
+  def pow(m,p), do: Matrex.pow(a, b)
+
+  def m ^^^ p, when is_number(a) and is_number(b) do: :math.pow(m, p)
+  def m ^^^ p, do: Matrex.pow(m, p)
+
 end
