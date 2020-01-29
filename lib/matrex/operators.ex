@@ -77,10 +77,10 @@ defmodule Matrex.Operators do
   @doc "See `Matrex.square/1`"
   defdelegate pow2(matrex), to: Matrex, as: :square
 
-  def pow(m,p) when is_number(a) and is_number(b), do: :math.pow(m,p)
-  def pow(m,p), do: Matrex.pow(a, b)
+  def pow(m,p) when is_number(m) and is_number(p), do: :math.pow(m,p)
+  def pow(m,p), do: Matrex.pow(m, p)
 
-  def m ^^^ p, when is_number(a) and is_number(b) do: :math.pow(m, p)
+  def m ^^^ p when is_number(m) and is_number(m), do: :math.pow(m, p)
   def m ^^^ p, do: Matrex.pow(m, p)
 
 end
