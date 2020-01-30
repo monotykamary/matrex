@@ -36,6 +36,7 @@ defmodule Matrex.Operators do
       import Kernel, except: [-: 1, +: 2, -: 2, *: 2, /: 2, <|>: 2]
       import Matrex
       import Matrex.Operators
+      alias Matrex.Vector
     end
   end
 
