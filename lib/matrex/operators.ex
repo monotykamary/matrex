@@ -41,6 +41,7 @@ defmodule Matrex.Operators do
 
   # Unary
   @doc false
+  def -m when is_number(m), do: -m
   def -m, do: Matrex.neg(m)
 
   # Binary
