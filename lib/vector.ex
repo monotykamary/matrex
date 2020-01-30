@@ -70,7 +70,7 @@ defmodule Matrex.Vector do
       └                         ┘
   """
   @spec ones(Matrex.index()) :: Matrex.t()
-  def ones(len) when is_integer(len), do: fill(len, 1)
+  def ones(len) when is_integer(len), do: Matrex.fill(1, len, 1)
 
   @doc """
   Create matrix of zeros of the specified size. NIF, using `memset()`.
