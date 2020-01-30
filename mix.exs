@@ -1,7 +1,7 @@
 defmodule Matrex.MixProject do
   use Mix.Project
 
-  @version "0.6.9"
+  @version "0.6.10"
 
   def project do
     [
