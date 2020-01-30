@@ -20,4 +20,9 @@ defmodule VectorBasicsTest do
     assert vec1 == Matrex.new("3.5 3.5")
   end
 
+  test "test size" do
+    vec1 = Vector.fill(3, 3.5)
+    assert Vector.size(vec1) == 3
+  end
+
 end

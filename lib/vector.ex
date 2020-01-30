@@ -116,4 +116,20 @@ defmodule Matrex.Vector do
       when (is_number(value) or value in [:nan, :inf, :neg_inf]) and idx > 0 and idx <= len,
       do: Matrex.set(m, 1, idx, value)
 
+  @doc """
+  Return size of matrix as `{rows, cols}`
+
+  ## Example
+
+      iex> m = Vector.random(3)
+      #Matrex[2×3]
+      ┌                         ┐
+      │ 0.63423 0.29651 0.22844 │
+      └                         ┘
+      iex> Vector.size(m)
+      3
+  """
+  @spec size(Matrex.t()) :: Matrex.index()
+  def size(vector_data(len, _)), do: len
+
 end
