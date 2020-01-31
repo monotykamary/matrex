@@ -31,4 +31,24 @@ defmodule VectorBasicsTest do
     assert slice == Vector.new("7 1 0")
   end
 
+  test "test is_vector?" do
+    v = Matrex.ones(1, 3)
+    m = Matrex.ones(3, 3)
+
+    assert Vector.is_vector?(v) == true
+    assert Vector.is_vector?(m) == false
+    assert Vector.is_vector?(3) == false
+  end
+
+  test "test assert_vector" do
+    v = Matrex.ones(1, 3)
+    m = Matrex.ones(3, 3)
+
+    assert Vector.assert_vector!(v) == true
+
+    assert_raise ArgumentError, fn ->
+      assert Vector.assert_vector!(m) == true
+    end
+  end
+
 end

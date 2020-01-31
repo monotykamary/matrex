@@ -27,7 +27,8 @@ defmodule Matrex.Vector do
 
   def new(text) when is_binary(text) do
     res = Matrex.new( text )
-
+    assert_vector!(res)
+    res
   end
 
   @doc """
@@ -42,12 +43,12 @@ defmodule Matrex.Vector do
       └                         ┘
 
   """
-  def is_vector?( vector_data(_len, _data) = m ), do: true
+  def is_vector?( vector_data(_len, _data) = _m ), do: true
   def is_vector?( _m ), do: false
 
-  def assert_vector!( vector_data(_len, _data) = m ), do: true
-  def assert_vector!( matrex_data(c, r, _data) = m ), do: throw %ArgumentError{message: "Expecting a Vector[1xN], got Matrex[#{c}, #{r}]"}
-  def assert_vector!( _m ), do: throw %ArgumentError{message: "Expecting a Matrex Vector"}
+  def assert_vector!( vector_data(_len, _data) = _m ), do: true
+  def assert_vector!( matrex_data(c, r, _data) = _m ), do: raise %ArgumentError{message: "Expecting a Vector[1xN], got Matrex[#{c}, #{r}]"}
+  def assert_vector!( _m ), do: raise %ArgumentError{message: "Expecting a Matrex Vector"}
 
   @doc """
   Creates new 1-column matrix (aka vector) from the given list.
