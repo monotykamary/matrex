@@ -25,4 +25,10 @@ defmodule VectorBasicsTest do
     assert Vector.size(vec1) == 3
   end
 
+  test "test set_submatrix slice" do
+    m = Vector.new("7 2 3")
+    slice = Vector.set_slice(m, 2..3, Vector.new("1 0"))
+    assert slice == Vector.new("7 1 0")
+  end
+
 end
