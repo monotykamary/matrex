@@ -25,6 +25,30 @@ defmodule Matrex.Vector do
     Matrex.new( [lst] )
   end
 
+  def new(text) when is_binary(text) do
+    res = Matrex.new( text )
+
+  end
+
+  @doc """
+  Is given Matrex a vector?
+
+  ## Examples
+
+      iex> [1,2,3] |> Vector.new()
+      #Matrex[1×3]
+      ┌                         ┐
+      │     1.0     2.0     3.0 │
+      └                         ┘
+
+  """
+  def is_vector?( vector_data(_len, _data) = m ), do: true
+  def is_vector?( _m ), do: false
+
+  def assert_vector!( vector_data(_len, _data) = m ), do: true
+  def assert_vector!( matrex_data(c, r, _data) = m ), do: throw %ArgumentError{message: "Expecting a Vector[1xN], got Matrex[#{c}, #{r}]"}
+  def assert_vector!( _m ), do: throw %ArgumentError{message: "Expecting a Matrex Vector"}
+
   @doc """
   Creates new 1-column matrix (aka vector) from the given list.
 
@@ -131,5 +155,33 @@ defmodule Matrex.Vector do
   """
   @spec size(Matrex.t()) :: Matrex.index()
   def size(vector_data(len, _)), do: len
+
+  @doc """
+  Set submatrix for a given matrix. NIF.
+
+  Rows and columns ranges are inclusive and one-based.
+
+  ## Example
+
+      iex> m = Vector.new("7 2 3")
+      #Matrex[3×3]
+      ┌                         ┐
+      │     7.0     2.0     3.0 │
+      └                         ┘
+
+      iex> Vector.set_slice(m, 2..3, Vector.new("1 0"))
+      #Matrex[3×3]
+      ┌                         ┐
+      │     7.0     0.0     1.0 │
+      └                         ┘
+  """
+  @spec set_slice(Matrex.t(), Range.t(), Matrex.t()) :: Matrex.t()
+  def set_slice(vector_data(len, _rest, _data) = v,
+                    idx_from..idx_to,
+                    vector_data(sub_len, _sub_rest, _subdata) = subslice)
+      when idx_from in 1..len and
+           idx_to in idx_from..len and
+           sub_len == (idx_to-idx_from+1),
+      do: Matrex.set_submatrix(v, 1..1, idx_from..idx_to, subslice)
 
 end
