@@ -71,6 +71,7 @@ defmodule Matrex.Operators do
   Enum.each(Matrex.math_functions_list(), fn f ->
     @doc "Applies C language #{f}(x) to each element of the matrix. See `Matrex.apply/2`"
     def unquote(f)(%Matrex{} = m), do: Matrex.apply(m, unquote(f))
+    def unquote(f)(n) when is_number(n), do: apply(:math, unquote(f), n)
   end)
 
   # Functions
